@@ -60,21 +60,7 @@ public class ITRestaurantAdmin {
 
         BrowserContext context = browser.newContext();
         page = context.newPage();
-        
-    }
 
-    @AfterEach
-    public void teardown() {
-        browser.close();
-    }
-
-    @AfterAll
-    public static void teardownWiremock() {
-        wireMockServer.stop();
-    }
-
-    @Test
-    public void admin_user_can_create_restaurant() throws Exception {
         String url = String.format("http://localhost:%d/oauth2/authorization/my-oauth-provider", port);
         page.navigate(url);
 
@@ -88,7 +74,20 @@ public class ITRestaurantAdmin {
 
         url = String.format("http://localhost:%d/", port);
         page.navigate(url);
+    }
 
+    @AfterEach
+    public void teardown() {
+        browser.close();
+    }
+
+    @AfterAll
+    public static void teardownWiremock() {
+        wireMockServer.stop();
+    }
+
+    @Test
+    public void admin_user_can_create_edit_delete_restaurant() throws Exception {
         page.getByText("Restaurants").click();
         page.getByText("Create Restaurant").click();
 
