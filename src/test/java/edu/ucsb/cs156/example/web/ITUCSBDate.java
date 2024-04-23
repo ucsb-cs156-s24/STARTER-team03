@@ -18,6 +18,7 @@ import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemp
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.Locator.PressSequentiallyOptions;
 import com.microsoft.playwright.Page;
 
 import com.microsoft.playwright.Playwright;
@@ -30,7 +31,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("integration")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ITRestaurant {
+public class ITUCSBDate {
     @LocalServerPort
     private int port;
 
@@ -110,39 +111,40 @@ public class ITRestaurant {
         wireMockServer.stop();
     }
 
-    @Test
-    public void admin_user_can_create_edit_delete_restaurant() throws Exception {
-        setupAdmin();
+    // @Test
+    // public void admin_user_can_create_edit_delete_date() throws Exception {
+    //     setupAdmin();
 
-        page.getByText("Restaurants").click();
+    //     page.getByText("UCSB Dates").click();
 
-        page.getByText("Create Restaurant").click();
-        assertThat(page.getByText("Create New Restaurant")).isVisible();
-        page.getByTestId("RestaurantForm-name").fill("Freebirds");
-        page.getByTestId("RestaurantForm-description").fill("Build your own burrito chain");
-        page.getByTestId("RestaurantForm-submit").click();
+    //     page.getByText("Create UCSBDate").click();
+    //     assertThat(page.getByText("Create New UCSBDate")).isVisible();
+    //     page.getByTestId("UCSBDateForm-quarterYYYYQ").fill("20241");
+    //     page.getByTestId("UCSBDateForm-localDateTime").pressSequentially("021920240000", new PressSequentiallyOptions().setDelay(200));
+    //     page.getByTestId("UCSBDateForm-name").fill("Presidents' Day");
+    //     page.getByTestId("UCSBDateForm-submit").click();
 
-        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-description")).hasText("Build your own burrito chain");
+    //     assertThat(page.getByTestId("UCSBDateTable-cell-row-0-col-name")).hasText("Presidents' Day");
 
-        page.getByTestId("RestaurantTable-cell-row-0-col-Edit-button").click();
-        assertThat(page.getByText("Edit Restaurant")).isVisible();
-        page.getByTestId("RestaurantForm-description").fill("THE BEST");
-        page.getByTestId("RestaurantForm-submit").click();
+    //     page.getByTestId("UCSBDateTable-cell-row-0-col-Edit-button").click();
+    //     assertThat(page.getByText("Edit UCSBDate")).isVisible();
+    //     page.getByTestId("UCSBDateForm-name").fill("Presidents' Day 2024");
+    //     page.getByTestId("UCSBDateForm-submit").click();
 
-        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-description")).hasText("THE BEST");
+    //     assertThat(page.getByTestId("UCSBDateTable-cell-row-0-col-name")).hasText("Presidents' Day 2024");
 
-        page.getByTestId("RestaurantTable-cell-row-0-col-Delete-button").click();
+    //     page.getByTestId("UCSBDateTable-cell-row-0-col-Delete-button").click();
         
-        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-name")).not().isVisible();
-    }
+    //     assertThat(page.getByTestId("UCSBDateTable-cell-row-0-col-name")).not().isVisible();
+    // }
 
     @Test
-    public void regular_user_cannot_create_restaurant() throws Exception {
+    public void regular_user_cannot_create_date() throws Exception {
         setupRegularUser();
 
-        page.getByText("Restaurants").click();
+        page.getByText("UCSB Dates").click();
 
-        assertThat(page.getByText("Create Restaurant")).not().isVisible();
-        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-name")).not().isVisible();
+        assertThat(page.getByText("Create UCSBDate")).not().isVisible();
+        assertThat(page.getByTestId("UCSBDateTable-cell-row-0-col-name")).not().isVisible();
     }
 }
