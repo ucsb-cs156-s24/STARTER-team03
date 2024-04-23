@@ -27,7 +27,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("integration")
-public class ITOauth {
+public class ITRestaurantAdmin {
     @LocalServerPort
     private int port;
 
@@ -42,7 +42,7 @@ public class ITOauth {
             .port(8090)
             .extensions(new ResponseTemplateTransformer(true)));
 
-        WiremockServiceImpl.setupOauthMocks(wireMockServer, false);
+        WiremockServiceImpl.setupOauthMocks(wireMockServer, true);
 
         wireMockServer.start();
     }
@@ -57,6 +57,7 @@ public class ITOauth {
 
         BrowserContext context = browser.newContext();
         page = context.newPage();
+        
     }
 
     @AfterEach
@@ -70,22 +71,24 @@ public class ITOauth {
     }
 
     @Test
-    public void try_regular_user_login_logout() throws Exception {
-        // Navigate straight to authorization url, since login button doesn't change href inside integration test
+    public void admin_user_can_create_restaurant() throws Exception {
         String url = String.format("http://localhost:%d/oauth2/authorization/my-oauth-provider", port);
         page.navigate(url);
 
-        page.locator("#username").fill("cgaucho@ucsb.edu");
+        page.locator("#username").fill("admingaucho@ucsb.edu");
         page.locator("#password").fill("password");
 
         page.locator("#submit").click();
 
         assertThat(page.getByText("Log Out")).isVisible();
-        assertThat(page.getByText("Welcome, cgaucho@ucsb.edu")).isVisible();
+        assertThat(page.getByText("Welcome, admingaucho@ucsb.edu")).isVisible();
 
-        page.getByText("Log Out").click();
+        url = String.format("http://localhost:%d/", port);
+        page.navigate(url);
 
-        assertThat(page.getByText("Log In")).isVisible();
-        assertThat(page.getByText("Log Out")).not().isVisible();
+        page.getByText("Restaurants").click();
+        page.getByText("Create Restaurant").click();
+
+        assertThat(page.getByText("Create New Restaurant")).isVisible();
     }
 }

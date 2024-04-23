@@ -21,7 +21,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("integration")
-class ITHomePage {
+public class ITHomePage {
     @LocalServerPort
     private int port;
 
@@ -41,7 +41,7 @@ class ITHomePage {
     }
 
     @Test
-    public void testGreeting() throws Exception {
+    public void home_page_shows_greeting() throws Exception {
         String url = String.format("http://localhost:%d/", port);
         page.navigate(url);
 
