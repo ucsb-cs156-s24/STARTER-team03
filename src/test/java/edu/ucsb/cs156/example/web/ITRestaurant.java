@@ -30,7 +30,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("integration")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ITRestaurantAdmin {
+public class ITRestaurant {
     @LocalServerPort
     private int port;
 
@@ -45,13 +45,12 @@ public class ITRestaurantAdmin {
             .port(8090)
             .extensions(new ResponseTemplateTransformer(true)));
 
-        WiremockServiceImpl.setupOauthMocks(wireMockServer, true);
-
         wireMockServer.start();
     }
     
-    @BeforeEach
-    public void setup() {
+    public void setupAdmin() {
+        WiremockServiceImpl.setupOauthMocks(wireMockServer, true);
+        
         // Launch playwright browser headless
         // browser = Playwright.create().chromium().launch();
 
@@ -66,11 +65,36 @@ public class ITRestaurantAdmin {
 
         page.locator("#username").fill("admingaucho@ucsb.edu");
         page.locator("#password").fill("password");
-
         page.locator("#submit").click();
 
         assertThat(page.getByText("Log Out")).isVisible();
         assertThat(page.getByText("Welcome, admingaucho@ucsb.edu")).isVisible();
+
+        url = String.format("http://localhost:%d/", port);
+        page.navigate(url);
+    }
+
+    public void setupRegularUser() {
+        WiremockServiceImpl.setupOauthMocks(wireMockServer, false);
+        
+        // Launch playwright browser headless
+        // browser = Playwright.create().chromium().launch();
+
+        // Launch playwright browser with visual
+        browser = Playwright.create().chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+
+        BrowserContext context = browser.newContext();
+        page = context.newPage();
+
+        String url = String.format("http://localhost:%d/oauth2/authorization/my-oauth-provider", port);
+        page.navigate(url);
+
+        page.locator("#username").fill("cgaucho@ucsb.edu");
+        page.locator("#password").fill("password");
+        page.locator("#submit").click();
+
+        assertThat(page.getByText("Log Out")).isVisible();
+        assertThat(page.getByText("Welcome, cgaucho@ucsb.edu")).isVisible();
 
         url = String.format("http://localhost:%d/", port);
         page.navigate(url);
@@ -88,16 +112,37 @@ public class ITRestaurantAdmin {
 
     @Test
     public void admin_user_can_create_edit_delete_restaurant() throws Exception {
+        setupAdmin();
+
         page.getByText("Restaurants").click();
+
         page.getByText("Create Restaurant").click();
-
         assertThat(page.getByText("Create New Restaurant")).isVisible();
-
         page.getByTestId("RestaurantForm-name").fill("Freebirds");
         page.getByTestId("RestaurantForm-description").fill("Build your own burrito chain");
-
         page.getByTestId("RestaurantForm-submit").click();
 
         assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-name")).hasText("Freebirds");
+
+        page.getByTestId("RestaurantTable-cell-row-0-col-Edit-button").click();
+        assertThat(page.getByText("Edit Restaurant")).isVisible();
+        page.getByTestId("RestaurantForm-description").fill("THE BEST");
+        page.getByTestId("RestaurantForm-submit").click();
+
+        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-description")).hasText("THE BEST");
+
+        page.getByTestId("RestaurantTable-cell-row-0-col-Delete-button").click();
+        
+        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-name")).not().isVisible();
+    }
+
+    @Test
+    public void regular_user_cannot_create_restaurant() throws Exception {
+        setupRegularUser();
+
+        page.getByText("Restaurants").click();
+
+        assertThat(page.getByText("Create Restaurant")).not().isVisible();
+        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-name")).not().isVisible();
     }
 }
