@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -27,6 +29,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("integration")
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ITRestaurantAdmin {
     @LocalServerPort
     private int port;
@@ -90,5 +93,12 @@ public class ITRestaurantAdmin {
         page.getByText("Create Restaurant").click();
 
         assertThat(page.getByText("Create New Restaurant")).isVisible();
+
+        page.getByTestId("RestaurantForm-name").fill("Freebirds");
+        page.getByTestId("RestaurantForm-description").fill("Build your own burrito chain");
+
+        page.getByTestId("RestaurantForm-submit").click();
+
+        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-name")).hasText("Freebirds");
     }
 }

@@ -30,7 +30,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("integration")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ITOauth {
+public class ITRestaurantUser {
     @LocalServerPort
     private int port;
 
@@ -60,6 +60,7 @@ public class ITOauth {
 
         BrowserContext context = browser.newContext();
         page = context.newPage();
+        
     }
 
     @AfterEach
@@ -73,8 +74,7 @@ public class ITOauth {
     }
 
     @Test
-    public void try_regular_user_login_logout() throws Exception {
-        // Navigate straight to authorization url, since login button doesn't change href inside integration test
+    public void regular_user_cannot_create_restaurant() throws Exception {
         String url = String.format("http://localhost:%d/oauth2/authorization/my-oauth-provider", port);
         page.navigate(url);
 
@@ -86,9 +86,12 @@ public class ITOauth {
         assertThat(page.getByText("Log Out")).isVisible();
         assertThat(page.getByText("Welcome, cgaucho@ucsb.edu")).isVisible();
 
-        page.getByText("Log Out").click();
+        url = String.format("http://localhost:%d/", port);
+        page.navigate(url);
 
-        assertThat(page.getByText("Log In")).isVisible();
-        assertThat(page.getByText("Log Out")).not().isVisible();
+        page.getByText("Restaurants").click();
+
+        assertThat(page.getByText("Create Restaurant")).not().isVisible();
+        assertThat(page.getByTestId("RestaurantTable-cell-row-0-col-name")).not().isVisible();
     }
 }
