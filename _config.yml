@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s24/STARTER-team03
 owner: ucsb-cs156-s24
 repo_name: STARTER-team03
-pull_requests: [{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pcAp-newIt","number":3,"title":"Pc ap new it","url":"https://github.com/ucsb-cs156-s24/STARTER-team03/pull/3"},{"author":{"id":"MDQ6VXNlcjU2MDk2NzQ0","is_bot":false,"login":"andrewpengucsb","name":""},"headRefName":"ap-newIT","number":2,"title":"Add integration tests for Restaurants and UCSBDates","url":"https://github.com/ucsb-cs156-s24/STARTER-team03/pull/2"}]
+pull_requests: [{"author":{"id":"MDQ6VXNlcjU2MDk2NzQ0","is_bot":false,"login":"andrewpengucsb","name":""},"headRefName":"ap-restaurant","number":4,"title":"Add Restaurants e2e tests","url":"https://github.com/ucsb-cs156-s24/STARTER-team03/pull/4"},{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pcAp-newIt","number":3,"title":"Pc ap new it","url":"https://github.com/ucsb-cs156-s24/STARTER-team03/pull/3"}]
