@@ -1,0 +1,69 @@
+# Creates/Resets the gh-pages branch to the intended start state
+
+name: "81-pull-request-slack-msg: Send a slack message whenever there's a pull request"
+on:
+  pull_request:
+    types:
+      - closed
+
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+
+jobs:
+
+  get-pr-num:
+    name: Get PR Number
+    runs-on: ubuntu-latest
+    outputs:
+      pr_number: ${{ steps.get-pr-num.outputs.pr_number }}
+      branch_name: ${{ steps.get-branch-name.outputs.branch_name }}
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3.5.2
+      with:
+        fetch-depth: 1
+        token: ${{ github.token }}
+    - name: Get PR number
+      id: get-pr-num
+      run: |
+         echo "GITHUB_EVENT_PATH=${GITHUB_EVENT_PATH}"
+         pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+         echo "pr_number=${pr_number}" 
+         echo "pr_number=${pr_number}" >> "$GITHUB_OUTPUT"
+    - name: Figure out Branch name
+      id: get-branch-name
+      run: | 
+          GITHUB_HEAD_REF="${GITHUB_HEAD_REF}"
+          echo GITHUB_HEAD_REF=${GITHUB_HEAD_REF}
+          GITHUB_REF_CLEANED=${GITHUB_REF/refs\/heads\//}
+          echo GITHUB_REF_CLEANED=${GITHUB_REF_CLEANED}
+          GITHUB_REF_CLEANED=${GITHUB_REF_CLEANED//\//-}
+          echo GITHUB_REF_CLEANED=${GITHUB_REF_CLEANED}
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_CLEANED}}"
+          echo "branch_name=${BRANCH}"
+          echo "branch_name=${BRANCH}" >> "$GITHUB_OUTPUT"
+
+  if_merged:
+    needs: get-pr-num
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo The PR was merged
+
+  if_not_merged:
+    needs: get-pr-num
+    if: github.event.pull_request.merged != true
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo The PR was closed and not merged
+
+
