@@ -56,7 +56,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        echo The PR was merged
+        pr_number={{needs.get-pr-num.outputs.pr_number}}
+        echo The PR ${pr_number} was merged
 
   if_not_merged:
     needs: get-pr-num
@@ -64,6 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        echo The PR was closed and not merged
+        pr_number={{needs.get-pr-num.outputs.pr_number}}
+        echo The PR ${pr_number} was closed and not merged
 
 
