@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s24/STARTER-team03
 owner: ucsb-cs156-s24
 repo_name: STARTER-team03
-pull_requests: [{"author":{"id":"MDQ6VXNlcjU2MDk2NzQ0","is_bot":false,"login":"andrewpengucsb","name":""},"headRefName":"ap-adminemail","number":22,"title":"Fix admin email bug in tests","url":"https://github.com/ucsb-cs156-s24/STARTER-team03/pull/22"},{"author":{"id":"MDQ6VXNlcjU2MDk2NzQ0","is_bot":false,"login":"andrewpengucsb","name":""},"headRefName":"ap-liquibase","number":21,"title":"Add liquibase configuration and changelogs from team02 to team03","url":"https://github.com/ucsb-cs156-s24/STARTER-team03/pull/21"}]
+pull_requests: [{"author":{"id":"MDQ6VXNlcjU2MDk2NzQ0","is_bot":false,"login":"andrewpengucsb","name":""},"headRefName":"ap-liquibase","number":21,"title":"Add liquibase configuration and changelogs from team02 to team03","url":"https://github.com/ucsb-cs156-s24/STARTER-team03/pull/21"}]
