@@ -139,7 +139,13 @@
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-ui</artifactId>
       <version>1.7.0</version>
-   </dependency>
+    </dependency>
+
+    <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-maven-plugin</artifactId>
+      <version>3.8.0</version>
+    </dependency>
 
   </dependencies>
 
@@ -309,6 +315,16 @@
           <timestampedReports>false</timestampedReports>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-maven-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <propertyFile>liquibase.properties</propertyFile>
+        </configuration>
+      </plugin>
+      
     </plugins>
   </build>
 
